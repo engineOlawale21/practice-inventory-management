@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Carbon; // Import Carbon for efficient timestamp handling
 
 class BanksSeeder extends Seeder
 {
@@ -13,6 +14,10 @@ class BanksSeeder extends Seeder
      */
     public function run(): void
     {
+        // Define a single timestamp for all records for consistency
+        $now = Carbon::now();
+
+        // Define the base bank data
         $banks = [
             ['name' => 'MPESA', 'short_name' => 'MPESA', 'sort_code' => '99999'],
             ['name' => 'KCB Bank', 'short_name' => 'KCB', 'sort_code' => '01100'],
@@ -62,6 +67,14 @@ class BanksSeeder extends Seeder
             ['name' => 'KWFT Bank', 'short_name' => 'KWFT', 'sort_code' => '78000'],
         ];
 
-        DB::table('banks')->insert($banks);
+        // Map the banks array to include created_at and updated_at timestamps
+        $banksWithTimestamps = array_map(function ($bank) use ($now) {
+            $bank['created_at'] = $now;
+            $bank['updated_at'] = $now;
+            return $bank;
+        }, $banks);
+
+        // Perform a single bulk insertion
+        DB::table('banks')->insert($banksWithTimestamps);
     }
 }

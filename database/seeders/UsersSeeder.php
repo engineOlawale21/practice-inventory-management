@@ -14,10 +14,29 @@ class UsersSeeder extends Seeder
      */
     public function run(): void
     {
-        User::create([
-            'name' => 'Test User',
-            'email' => 'testuser@example.com',
-            'password' => Hash::make('password123'),
-        ]);
+        // Define the user data in a single array
+        $users = [
+            [
+                'name' => 'Test User',
+                'email' => 'testuser@example.com',
+                'password' => 'password123', // Raw password
+            ],
+            [
+                'name' => 'Olawale',
+                'email' => 'rolawale95@gmail.com',
+                'password' => 'pass123', // Raw password
+            ],
+            // Add more users here
+        ];
+
+        // Loop through the array and create each user
+        foreach ($users as $userData) {
+            User::create([
+                'name' => $userData['name'],
+                'email' => $userData['email'],
+                // Hash the password before creating the record
+                'password' => Hash::make($userData['password']),
+            ]);
+        }
     }
 }
