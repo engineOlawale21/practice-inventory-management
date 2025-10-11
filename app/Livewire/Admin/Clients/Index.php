@@ -9,25 +9,33 @@ use Livewire\WithPagination;
 class Index extends Component
 {
     use WithPagination;
-    function delete($id)
+
+    protected $paginationTheme = 'bootstrap'; // optional if using bootstrap UI
+
+    public function delete($id): void
     {
         try {
-            $client = Client::findOrFail($id);
-            if (count($client->sales) > 0) {
-                throw new \Exception("Error Processing request: This Client has bought from you {$client->sales->count()} time(s)", 1);
+            $client = Client::withCount('sales')->findOrFail($id);
+
+            if ($client->sales_count > 0) {
+                throw new \Exception(
+                    __("This client has purchased from you :count time(s).", ['count' => $client->sales_count])
+                );
             }
+
             $client->delete();
 
-            $this->dispatch('done', success: "Successfully Deleted this Client");
-        } catch (\Throwable $th) {
-            //throw $th;
-            $this->dispatch('done', error: "Something went wrong: " . $th->getMessage());
+            $this->dispatch('done', success: __("Client deleted successfully."));
+        } catch (\Throwable $e) {
+            report($e);
+            $this->dispatch('done', error: __("Something went wrong: :msg", ['msg' => $e->getMessage()]));
         }
     }
+
     public function render()
     {
         return view('livewire.admin.clients.index', [
-            'clients' => Client::orderBy('id','DESC')->paginate(10)
+            'clients' => Client::latest('id')->paginate(10),
         ]);
     }
 }

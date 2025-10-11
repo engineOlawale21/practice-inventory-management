@@ -4,40 +4,49 @@ namespace App\Livewire\Admin\Banks;
 
 use App\Models\Bank;
 use Livewire\Component;
+use Illuminate\Validation\ValidationException;
 
 class Edit extends Component
 {
     public Bank $bank;
 
-    function rules()
+    protected function rules(): array
     {
         return [
-            'bank.name' => "required",
-            'bank.short_name' => "required",
-            'bank.sort_code' => "required",
+            'bank.name'       => ['required', 'string', 'max:255'],
+            'bank.short_name' => ['required', 'string', 'max:50'],
+            'bank.sort_code'  => ['required', 'string', 'max:20'],
         ];
     }
 
-    function mount($id)
+    public function mount(int $id): void
     {
-        $this->bank = Bank::find($id);
+        $this->bank = Bank::findOrFail($id);
     }
 
-    function updated()
+    public function updated($property): void
     {
-        $this->validate();
+        $this->validateOnly($property);
     }
 
-    function save()
+    public function save()
     {
         $this->validate();
+
         try {
-            $this->bank->update();
+            $this->bank->save();
+
+            session()->flash('success', __('Bank updated successfully.'));
             return redirect()->route('admin.banks.index');
-        } catch (\Throwable $th) {
-            $this->dispatch('done', error: "Something Went Wrong: " . $th->getMessage());
+        } catch (\Throwable $e) {
+            report($e);
+
+            throw ValidationException::withMessages([
+                'bank.name' => __('Something went wrong: :msg', ['msg' => $e->getMessage()]),
+            ]);
         }
     }
+
     public function render()
     {
         return view('livewire.admin.banks.edit');
