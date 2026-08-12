@@ -1,66 +1,100 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Practice Inventory Management
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A small inventory management application built with Laravel. It manages products, categories, purchases, sales, clients, suppliers, payments, and basic invoicing.
 
-## About Laravel
+## Key Features
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- Product & category management
+- Purchases, sales and payment records
+- Clients and suppliers management
+- Invoices, delivery notes and credit notes
+- Seeders for sample data (see database/seeders)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Requirements
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- PHP 8.1+ (or the version required by the included Laravel setup)
+- Composer
+- Node.js (18+) and npm/yarn
+- A relational database (MySQL, MariaDB, or PostgreSQL)
 
-## Learning Laravel
+## Quick Setup
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+1. Clone the repo and enter the directory:
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+	git clone <repo-url> && cd practice-inventory-management
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+2. Copy the environment file and set your environment variables:
 
-## Laravel Sponsors
+	cp .env.example .env
+	(update `APP_URL`, `DB_CONNECTION`, `DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD`)
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+3. Install PHP dependencies:
 
-### Premium Partners
+	composer install
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+4. Install JS dependencies and build assets:
+
+	npm install
+	npm run dev
+
+5. Generate application key:
+
+	php artisan key:generate
+
+6. Run migrations and seeders:
+
+	php artisan migrate --seed
+
+	To seed only clients, run: `php artisan db:seed --class=ClientsSeeder`
+
+7. Create the storage link (for profile photos and uploads):
+
+	php artisan storage:link
+
+8. Start the development server:
+
+	php artisan serve
+
+## Database Seeders
+
+Sample seeders live in `database/seeders`, for example `database/seeders/ClientsSeeder.php`.
+Run `php artisan migrate --seed` to populate the database with starter data.
+
+## Running Tests
+
+This project uses Pest/PHPUnit for testing. Run the test-suite with:
+
+```
+php artisan test
+```
+
+Or with Pest directly:
+
+```
+./vendor/bin/pest
+```
+
+## Project Structure (high level)
+
+- `app/Models` — Eloquent models (Product, Client, Supplier, Sale, Purchase, etc.)
+- `app/Http/Controllers` — HTTP controllers
+- `database/migrations` — database schema
+- `database/seeders` — seeders for sample data
+- `resources/views` — Blade templates
+- `routes/web.php` — application routes
+
+## Environment & Configuration
+
+Ensure the following environment variables are set in your `.env` file:
+
+- `APP_URL` — application URL
+- `DB_*` — database configuration
+- `MAIL_*` — mail settings for notifications
 
 ## Contributing
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Contributions are welcome. Please open an issue for larger changes or a pull request with a clear description of your changes.
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+This project is open-sourced software licensed under the MIT license.
